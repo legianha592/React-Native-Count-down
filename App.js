@@ -11,12 +11,19 @@ export default class App extends React.Component {
       min: 25,
       second: 0,
       bigTime: true,
+      counting: false,
     }
   }
 
   startDecrease(){
     console.log("this is did count");
-    this.interval = setInterval(this.decrease, 1000);
+    if (this.state.counting === false){
+      this.interval = setInterval(this.decrease, 1000);
+      this.setState({
+        counting: true,
+      })
+    }
+
   }
 
   decrease = () => {
@@ -31,12 +38,17 @@ export default class App extends React.Component {
         second: 59
       }))
     }
-    console.log(this.state.min, this.state.second)
   }
 
   stopDecrease(){
     console.log("this is stop count");
-    clearInterval(this.interval);
+    if (this.state.counting === true){
+      clearInterval(this.interval);
+      this.setState({
+        counting: false,
+      })
+    }
+
   }
 
   resetTime(){
@@ -74,6 +86,15 @@ export default class App extends React.Component {
   }
 
   render(){
+    var string_min = this.state.min;
+    var string_second = this.state.second;
+    if (this.state.min<10){
+      string_min = "0" + this.state.min;
+    }
+    if (this.state.second<10){
+      string_second = "0" + this.state.second;
+    }
+    console.log("render = ", this.state.counting, string_min, string_second)
     return (
       <View style={styles.allview}>
           <Button
@@ -81,7 +102,7 @@ export default class App extends React.Component {
             onPress={() => this.switchTime()}/>
           <View style={{alignItems: 'center'}}>
             <Text style={styles.text}>
-              {this.state.min}:{this.state.second}
+              {string_min}:{string_second}
             </Text>
           </View>
           <Button 
